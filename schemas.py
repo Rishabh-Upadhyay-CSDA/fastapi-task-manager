@@ -1,25 +1,43 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 
-# Base schema with shared attributes
+# User Schemas
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+
+    class Config:
+        from_attributes = True
+
+# Token Schemas
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
+
+# Task Schemas
 class TaskBase(BaseModel):
     title: str
     description: Optional[str] = None
     completed: bool = False
 
-# Schema for creating a new task
 class TaskCreate(TaskBase):
     pass
 
-# Schema for updating a task
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     completed: Optional[bool] = None
 
-# Schema for returning a task (includes database ID)
 class TaskResponse(TaskBase):
     id: int
+    owner_id: int
 
     class Config:
         from_attributes = True
