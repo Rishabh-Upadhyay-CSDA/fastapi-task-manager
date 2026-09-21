@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 import models
 import schemas
@@ -58,10 +58,20 @@ def create_task(
 def get_tasks(
     skip: int = 0, 
     limit: int = 10, 
+    completed: Optional[bool] = None, 
+    search: Optional[str] = None, 
     db: Session = Depends(get_db), 
     current_user: models.User = Depends(auth.get_current_user)
 ):
-    return db.query(models.Task).filter(models.Task.owner_id == current_user.id).offset(skip).limit(limit).all()
+    query = db.query(models.Task).filter(models.Task.owner_id == current_user.id)
+
+    if completed is not None:
+        query = query.filter(models.Task.completed == completed)
+
+    if search:
+        query = query.filter(models.Task.title.contains(search))
+
+    return query.offset(skip).limit(limit).all()
 
 @app.get("/tasks/{task_id}", response_model=schemas.TaskResponse)
 def get_task(
