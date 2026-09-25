@@ -21,8 +21,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- AUTHENTICATION ENDPOINTS ---
-
 @app.post("/signup", response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
 def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
@@ -48,8 +46,6 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     
     access_token = auth.create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer"}
-
-# --- SECURE TASK ENDPOINTS ---
 
 @app.post("/tasks", response_model=schemas.TaskResponse, status_code=status.HTTP_201_CREATED)
 def create_task(
@@ -106,3 +102,22 @@ def delete_task(
     db.delete(task)
     db.commit()
     return None
+
+@app.get("/users/me", response_model=schemas.UserResponse)
+def read_user_me(current_user: models.User = Depends(auth.get_current_user)):
+    return current_user
+
+@app.put("/users/me", response_model=schemas.UserResponse)
+def update_user_me(
+    user_update: schemas.UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    if user_update.email:
+        current_user.email = user_update.email
+    if user_update.password:
+        current_user.hashed_password = auth.get_password_hash(user_update.password)
+    
+    db.commit()
+    db.refresh(current_user)
+    return current_user
