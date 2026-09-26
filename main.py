@@ -103,6 +103,30 @@ def delete_task(
     db.commit()
     return None
 
+@app.put("/tasks/{task_id}", response_model=schemas.TaskResponse)
+def update_task(
+    task_id: int,
+    task_update: schemas.TaskUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    task = db.query(models.Task).filter(
+        models.Task.id == task_id,
+        models.Task.owner_id == current_user.id
+    ).first()
+
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    if task_update.title is not None:
+        task.title = task_update.title
+    if task_update.completed is not None:
+        task.completed = task_update.completed
+
+    db.commit()
+    db.refresh(task)
+    return task
+
 @app.get("/users/me", response_model=schemas.UserResponse)
 def read_user_me(current_user: models.User = Depends(auth.get_current_user)):
     return current_user

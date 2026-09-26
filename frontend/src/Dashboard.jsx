@@ -32,9 +32,27 @@ export default function Dashboard({ onLogout, onOpenProfile }) {
   };
 
   const toggleTask = async (task) => {
-    await api.put(`/tasks/${task.id}`, { completed: !task.completed });
-    fetchTasks();
+    try {
+      await api.put(`/tasks/${task.id}`, { completed: !task.completed });
+      fetchTasks();
+    } catch (err) {
+      console.error('Failed to update task:', err);
+    }
   };
+
+  {tasks.map((task) => (
+    <li key={task.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 0' }}>
+      <input
+        type="checkbox"
+        checked={task.completed}
+        onChange={() => toggleTask(task)}
+      />
+      <span style={{ textDecoration: task.completed ? 'line-through' : 'none', flex: 1 }}>
+        {task.title}
+      </span>
+      <button onClick={() => deleteTask(task.id)} style={{ color: 'red' }}>Delete</button>
+    </li>
+  ))}
 
   const deleteTask = async (id) => {
     await api.delete(`/tasks/${id}`);
