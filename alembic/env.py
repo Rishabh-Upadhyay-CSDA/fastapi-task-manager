@@ -1,8 +1,12 @@
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
+
 from logging.config import fileConfig
-
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
+from sqlalchemy import engine_from_config, pool
 from alembic import context
 
 from database import Base, SQLALCHEMY_DATABASE_URL
@@ -28,6 +32,7 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+db_url = os.getenv("DATABASE_URL")
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -41,7 +46,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URL)
+    url = config.get_main_option("sqlalchemy.url", db_url)
     context.configure(
         url=url,
         target_metadata=target_metadata,
