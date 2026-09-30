@@ -1,4 +1,4 @@
-export default function Header({ userEmail, onOpenProfile, onLogout }) {
+export default function Header({ onOpenProfile, onLogout }) {
   return (
     <header className="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
       <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -11,9 +11,9 @@ export default function Header({ userEmail, onOpenProfile, onLogout }) {
             </svg>
           </div>
           <div>
-            <h1 className="text-xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent tracking-tight">
+            <h2 className="text-xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent tracking-tight">
               TaskFlow Pro
-            </h1>
+            </h2>
             <p className="text-xs text-slate-400 font-medium">Smart Workspaces</p>
           </div>
         </div>
@@ -25,7 +25,7 @@ export default function Header({ userEmail, onOpenProfile, onLogout }) {
             className="flex items-center gap-2 text-sm text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 px-3.5 py-1.5 rounded-lg transition-all"
           >
             <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="max-w-[120px] truncate">{userEmail}</span>
+            Profile
           </button>
           <button 
             onClick={onLogout}

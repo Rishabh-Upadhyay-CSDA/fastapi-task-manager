@@ -3,7 +3,7 @@ import api from './api';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
-export default function Dashboard({ userEmail, onLogout, onOpenProfile }) {
+export default function Dashboard({ onLogout, onOpenProfile }) {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
   const [filter, setFilter] = useState('all');
@@ -46,14 +46,14 @@ export default function Dashboard({ userEmail, onLogout, onOpenProfile }) {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between font-sans selection:bg-indigo-500 selection:text-white">
       <div>
-        <Header userEmail={userEmail} onOpenProfile={onOpenProfile} onLogout={onLogout} />
+        <Header onOpenProfile={onOpenProfile} onLogout={onLogout} />
 
         <main className="max-w-3xl mx-auto px-6 py-10">
           
           {/* Welcome Banner */}
           <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-indigo-900/40 via-purple-900/30 to-slate-900 border border-indigo-500/20 shadow-xl backdrop-blur-sm">
             <h2 className="text-2xl font-bold text-white mb-1">
-              Organize your focus 👋
+              Organize your focus!
             </h2>
             <p className="text-sm text-slate-400">
               Track tasks seamlessly across production PostgreSQL storage.
