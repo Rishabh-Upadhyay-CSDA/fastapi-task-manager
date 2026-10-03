@@ -99,6 +99,7 @@ pytest
 ## Deployment Configuration
 
 - **Render (Backend):** Set Environment Variable `DATABASE_URL` pointing to your Neon PostgreSQL URI.
+- **Render (Backend):** Set Environment Variable `SECRET_KEY`.
 - **Vercel (Frontend):** Set Environment Variable `VITE_API_URL` pointing to your Render backend API URL.
 
 ---
